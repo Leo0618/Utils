@@ -4,7 +4,7 @@ package com.leo618.utils;
 /**
  * function : 日志输出.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("ALL")
 public final class LogUtil {
     private static boolean DEBUG = true;
 

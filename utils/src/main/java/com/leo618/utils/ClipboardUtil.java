@@ -2,16 +2,12 @@ package com.leo618.utils;
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 /**
  * function :剪切板工具类
  */
-@SuppressWarnings({"deprecation", "unused"})
-@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+@SuppressWarnings("ALL")
 public class ClipboardUtil {
-
 
     /**
      * 拷贝文本字符串到剪切板

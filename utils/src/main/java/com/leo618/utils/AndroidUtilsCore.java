@@ -1,13 +1,10 @@
 package com.leo618.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 
 /**
  * function:工具集入口类
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
-@SuppressLint("StaticFieldLeak")
 public final class AndroidUtilsCore {
     private static Context mContext;
 

@@ -6,21 +6,28 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 
 /**
  * function : 判断网络状态.
- *
- * <uses-permission name="android.permission.ACCESS_WIFI_STATE"/>
+ * <p></p>
+ * Created by lzj on 2016/1/28.
  */
-@SuppressWarnings({"unused", "BooleanMethodIsAlwaysInverted", "deprecation", "WeakerAccess"})
+@SuppressWarnings("ALL")
 public class NetworkUtil {
-    private static final String TAG = "NetworkUtil";
 
-    /** 获取物理地址 */
+    private static final String TAG = NetworkUtil.class.getSimpleName();
+
+    /** 获取IP mac */
     public static String getLocalIpAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
@@ -38,12 +45,10 @@ public class NetworkUtil {
         return "";
     }
 
-    /**
-     * 获取IP eg: 192.168.1.100
-     */
+    /** 获取内网IP */
     @SuppressWarnings("MissingPermission")
-    public static String getIPAddress(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public static String getLocalIPAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo != null) {
             int ipAddress = wifiInfo.getIpAddress();
@@ -67,7 +72,7 @@ public class NetworkUtil {
         return false;
     }
 
-    /** 判断MOBILE网络是否已连接 */
+    /** 判断MOBILE网络是否可用 */
     public static boolean isMobileConnected(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -79,7 +84,7 @@ public class NetworkUtil {
         return false;
     }
 
-    /** 判断Wifi网络是否已连接 */
+    /** 判断Wifi网络是否可用 */
     public static boolean isWifiConnected(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -103,8 +108,54 @@ public class NetworkUtil {
         return -1;
     }
 
-    /** 判断当前网络是否为wifi并且网络可用 */
+    /** 判断当前网络是否为wifi */
     public static boolean isWifi(Context mContext) {
         return getConnectedType(mContext) == ConnectivityManager.TYPE_WIFI;
+    }
+
+
+    /** 获取外网IP */
+    public static void getExternalIPAddress(final INetWorkStateCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String ip;
+                InputStream inStream;
+                try {
+                    URL infoUrl = new URL("http://1212.ip138.com/ic.asp");
+                    URLConnection connection = infoUrl.openConnection();
+                    HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                    int responseCode = httpConnection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        inStream = httpConnection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "gb2312"));
+                        StringBuilder builder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                        inStream.close();
+                        int start = builder.indexOf("[");
+                        int end = builder.indexOf("]");
+                        ip = builder.substring(start + 1, end);
+                        if (callback != null) {
+                            UIUtil.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callback.onResponse(ip);
+                                }
+                            });
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        ).start();
+    }
+
+    public interface INetWorkStateCallback {
+        void onResponse(String externalIP);
     }
 }
