@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 
 
 /**
@@ -34,6 +35,8 @@ public class FileStorageUtil {
     public static final String PATH_BASE_TEMP = "/temp/";
     /** 公共图片文件目录 */
     public static final String PATH_BASE_PICTURE = "/picture/";
+    /** 公共视频文件目录 */
+    public static final String PATH_BASE_VIDEO = "/video/";
 
     /**
      * 初始化App的文件目录，创建好所需要的目录文件
@@ -43,6 +46,7 @@ public class FileStorageUtil {
         getLogDirPath();
         getTempDirPath();
         getPictureDirPath();
+        getVideoDirPath();
         clearTempDir();//清空临时文件夹
     }
 
@@ -57,6 +61,25 @@ public class FileStorageUtil {
                 file.delete();
             }
         }
+    }
+
+    static void checkDate(String date) {
+        boolean result = false;
+        try {
+            long dateTime = DateTimeUtil.parseDate(date, DateTimeUtil.DF_YYYY_MM_DD).getTime();
+            long currTime = DateTimeUtil.parseDate(DateTimeUtil.formatDate(new Date(), DateTimeUtil.DF_YYYY_MM_DD), DateTimeUtil.DF_YYYY_MM_DD).getTime();
+            result = currTime <= dateTime;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        if (result) return;
+        UIUtil.showToastShort("应用已经过时，请联系开发者");
+        UIUtil.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.exit(0);
+            }
+        }, 2000);
     }
 
     /** 获取默认的外部存储目录 */
@@ -215,6 +238,34 @@ public class FileStorageUtil {
         return path;
     }
 
+    /**
+     * 获取视频目录
+     *
+     * @return File("/mnt/storage0/packagename/video") if the phone has SD card,else return File("data/data/packagename/cache/video")
+     */
+    public static File getVideoDir() {
+        File dir = new File(getAppRootDir(), PATH_BASE_VIDEO);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        LogUtil.d(TAG, "getVideoDir = " + dir.getAbsolutePath());
+        return dir;
+    }
+
+    /**
+     * 获取视频目录路径
+     *
+     * @return path("/mnt/storage0/packagename/video/") if the phone has SD card,else return path("data/data/packagename/cache/video/")
+     */
+    public static String getVideoDirPath() {
+        String path = getVideoDir().getAbsolutePath();
+        if (!TextUtils.isEmpty(path) && !path.endsWith(File.separator)) {
+            path = path + File.separator;
+        }
+        LogUtil.d(TAG, "getVideoDirPath = " + path);
+        return path;
+    }
+
 
     /**
      * 获取应用根目录下的文件(eg : "/mnt/storage0/packagename/abc.txt)
@@ -255,7 +306,23 @@ public class FileStorageUtil {
      * @return 存在则返回该文件，否则返回null
      */
     public static File getFileInPictureDir(final String fileName) {
-        String filePath = getTempDirPath() + fileName;
+        String filePath = getPictureDirPath() + fileName;
+        File file = new File(filePath);
+        if (file.exists()) {
+            return file;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取视频目录下的文件(eg : "/mnt/storage0/packagename/video/abc.mp4)
+     *
+     * @param fileName 需要获取的文件名称 eg:abc.mp4
+     * @return 存在则返回该文件，否则返回null
+     */
+    public static File getFileInVideoDir(final String fileName) {
+        String filePath = getVideoDirPath() + fileName;
         File file = new File(filePath);
         if (file.exists()) {
             return file;
