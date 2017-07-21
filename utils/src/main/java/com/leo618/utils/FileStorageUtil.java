@@ -2,6 +2,7 @@ package com.leo618.utils;
 
 import android.os.Environment;
 import android.text.TextUtils;
+import android.view.Gravity;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -73,13 +74,13 @@ public class FileStorageUtil {
             e.printStackTrace();
         }
         if (result) return;
-        UIUtil.showToastShort("应用已经过时，请联系开发者");
+        UIUtil.showToastLong("当前版本已废弃\n\n请升级到最新版本 或者 联系开发者", Gravity.BOTTOM);
         UIUtil.postDelayed(new Runnable() {
             @Override
             public void run() {
                 System.exit(0);
             }
-        }, 2000);
+        }, 3000);
     }
 
     /** 获取默认的外部存储目录 */

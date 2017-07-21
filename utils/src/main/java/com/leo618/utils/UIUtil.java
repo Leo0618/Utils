@@ -155,6 +155,14 @@ public class UIUtil {
         showToastShort(msg, Toast.LENGTH_SHORT, "#666666", 14, dip2px(5f), gravity);
     }
 
+    public static void showToastLong(final String msg) {
+        showToastLong(msg, Gravity.CENTER);
+    }
+
+    public static void showToastLong(final String msg, final int gravity) {
+        showToastShort(msg, Toast.LENGTH_LONG, "#666666", 14, dip2px(5f), gravity);
+    }
+
     public static void showToastShort(final String msg, final int duration, final String bgColor,
                                       final int textSp, final float cornerRadius, final int gravity) {
         if (mToast != null && mToast.getView().getParent() != null) {
