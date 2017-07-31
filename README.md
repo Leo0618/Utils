@@ -13,7 +13,7 @@ Utils for Android Developer.
 
 
 
-**Step3:**
+**Step2:**
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -24,7 +24,7 @@ Utils for Android Developer.
 
 
 
-**Step2:**
+**Step3:**
 
 install in your application or which extends application at method onCreate.
 
