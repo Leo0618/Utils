@@ -19,6 +19,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -833,5 +834,21 @@ public class ImageUtil {
             targetView.setCompoundDrawablePadding(compoundDrawablePadding);
         }
         targetView.setCompoundDrawables(left, top, right, bottom);
+    }
+
+    /**
+     * 获取视频文件第一帧
+     *
+     * @param filePath 视频文件路径
+     */
+    public static Bitmap getVideoThumb(String filePath) {
+        try {
+            MediaMetadataRetriever media = new MediaMetadataRetriever();
+            media.setDataSource(filePath);
+            return media.getFrameAtTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

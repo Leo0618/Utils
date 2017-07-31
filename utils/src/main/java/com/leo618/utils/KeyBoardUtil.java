@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 public class KeyBoardUtil {
 
     public static void showSoftInput(final View view) {
-        UIUtil.postDelayed(new Runnable() {
+        view.postDelayed(new Runnable() {
             @Override
             public void run() {
                 view.setFocusable(true);
@@ -22,7 +22,7 @@ public class KeyBoardUtil {
                 InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(view, 0);
             }
-        }, 200);
+        }, 100);
     }
 
     public static boolean hideSoftInput(View view) {

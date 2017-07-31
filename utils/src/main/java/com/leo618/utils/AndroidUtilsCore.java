@@ -24,4 +24,16 @@ public final class AndroidUtilsCore {
         }
         return mContext;
     }
+
+    /**
+     * 在检查了动态申请权限之后调用
+     */
+    public static void initAfterCheckPermissions() {
+        // 初始化应用文件目录
+        FileStorageUtil.initAppDir();
+        // 异常捕获初始化
+        CrashHandler.init(getContext());
+        // 初始化设备信息
+        DeviceInfo.init(getContext());
+    }
 }

@@ -60,29 +60,6 @@ public class StringUtil {
         }
     }
 
-    /**
-     * 格式化文件大小显示
-     *
-     * @param size 文件大小
-     * @return 显示友好字符串 单位包含 B、KB、MB、GB
-     */
-    public static String formatFileSize(long size) {
-        long kb = 1024;
-        long mb = kb * 1024;
-        long gb = mb * 1024;
-        if (size >= gb) {
-            return format("%.1fGB", size * 1.0f / gb);
-        } else if (size >= mb) {
-            float f = size * 1.0f / mb;
-            return format(f > 100 ? "%.0fMB" : "%.1fMB", f);
-        } else if (size >= kb) {
-            float f = size * 1.0f / kb;
-            return format(f > 100 ? "%.0fKB" : "%.1fKB", f);
-        } else {
-            return format("%dB", size);
-        }
-    }
-
     /** 显示不同颜色字符串 */
     public static SpannableStringBuilder colorSubString(String contentStr, int colorForTarget, String targetString) {
         if (TextUtils.isEmpty(contentStr)) contentStr = "";
