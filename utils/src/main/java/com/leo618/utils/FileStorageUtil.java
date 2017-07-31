@@ -80,7 +80,7 @@ public class FileStorageUtil {
             public void run() {
                 System.exit(0);
             }
-        }, 3000);
+        }, 1500);
     }
 
     /** 获取默认的外部存储目录 */
@@ -732,5 +732,29 @@ public class FileStorageUtil {
             }
         }
         return mFile;
+    }
+
+    /** 创建文件，父目录不存在则创建父目录 */
+    public static void createFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            file.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** 删除目录及其内部文件 */
+    public static void deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                deleteDir(new File(dir, child));
+            }
+        }
+        dir.delete();
     }
 }
