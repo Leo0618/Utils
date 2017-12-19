@@ -8,7 +8,7 @@ Utils for Android Developer.
 **Step1:**
 
 	dependencies {
-	    compile 'com.leo618.utils:utils:1.0.0'
+	    compile 'com.leo618.utils:utils:1.1.1'
 	}
 
 

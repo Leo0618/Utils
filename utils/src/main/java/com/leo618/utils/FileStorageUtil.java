@@ -2,7 +2,6 @@ package com.leo618.utils;
 
 import android.os.Environment;
 import android.text.TextUtils;
-import android.view.Gravity;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Date;
 
 
 /**
@@ -62,25 +60,6 @@ public class FileStorageUtil {
                 file.delete();
             }
         }
-    }
-
-    static void checkDate(String date) {
-        boolean result = false;
-        try {
-            long dateTime = DateTimeUtil.parseDate(date, DateTimeUtil.DF_YYYY_MM_DD).getTime();
-            long currTime = DateTimeUtil.parseDate(DateTimeUtil.formatDate(new Date(), DateTimeUtil.DF_YYYY_MM_DD), DateTimeUtil.DF_YYYY_MM_DD).getTime();
-            result = currTime <= dateTime;
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        if (result) return;
-        UIUtil.showToastLong("当前版本已废弃\n\n请升级到最新版本 或者 联系开发者", Gravity.BOTTOM);
-        UIUtil.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                System.exit(0);
-            }
-        }, 1500);
     }
 
     /** 获取默认的外部存储目录 */
@@ -756,5 +735,22 @@ public class FileStorageUtil {
             }
         }
         dir.delete();
+    }
+
+    /** 输入流转换成字符串 */
+    public static String readStream(InputStream is) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = is.read(buf)) != -1) {
+                baos.write(buf, 0, len);
+            }
+            is.close();
+            return baos.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

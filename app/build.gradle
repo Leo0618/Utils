@@ -29,5 +29,5 @@ dependencies {
     compile 'com.leo618:MPermission:0.0.2'
 
 //    compile project(':utils')
-    compile 'com.leo618.utils:utils:1.0.0'
+    compile 'com.leo618.utils:utils:1.1.0'
 }
